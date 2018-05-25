@@ -3,6 +3,7 @@
 <template>
   <div class="main-canvas-view">
     <canvas id="main-canvas" :width="canvasWidth+ 'px'" :height="canvasHeight+ 'px'"></canvas>
+    <game-over v-model="gameOverFlag"/>
   </div>
 </template>
 
@@ -11,6 +12,7 @@ import './index.scss'
 import { mapState } from 'vuex'
 import { KEY_CODES, DIFFICULTY } from '../../enums'
 import { START, STOP, PAUSE, RESUME, RESET } from '../../store/mutationTypes'
+import GameOver from '../GameOverModal'
 
 const originalSnakeBody = [[0, 0], [1, 0], [2, 0]]
 const originalSnakeHead = [3, 0]
@@ -28,12 +30,14 @@ const snakeHeadColorList = {
 
 export default {
   name: 'main-canvas',
+  components: { GameOver },
   data () {
     return {
+      gameOverFlag: true,
       canvas: undefined,
       context: undefined,
-      canvasWidth: 600,
-      canvasHeight: 600,
+      canvasWidth: 800,
+      canvasHeight: 800,
       containerArr: [], // 表示容器内空白位置
       snakeBody: originalSnakeBody.slice(),
       snakeHead: originalSnakeHead.slice(),
@@ -144,7 +148,6 @@ export default {
       this.$store.commit('ADD_SCORE')
     },
     keyPress ({ keyCode }) {
-      console.log(keyCode)
       if (this.disabledDirection === keyCode) {
         return
       }
@@ -268,7 +271,8 @@ export default {
       this.headDirection = KEY_CODES.RIGHT
       this.disabledDirection = KEY_CODES.LEFT
     },
-    startGame () {
+    async startGame () {
+      // const res = await this.$store.dispatch('nebulasPay')
       this.reset()
       this.$store.commit(START)
       this.clearCanvas()
@@ -276,7 +280,7 @@ export default {
       this.createFood()
       this.startTimer()
     },
-    stopGame () {
+    gameOver () {
       this.$store.commit(STOP)
       this.clearTimer()
       this.finalDraw('GAME OVER!')
@@ -300,7 +304,7 @@ export default {
         nextY += currentDiffPositions[1]
         if (this.checkIfStuck(nextX, nextY)) {
           console.log({ nextX, nextY })
-          this.stopGame()
+          this.gameOver()
           return
         }
         this.snakeBody.push(this.snakeHead)

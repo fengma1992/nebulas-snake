@@ -1,0 +1,61 @@
+@charset "UTF-8";
+
+@import "../../style/color.scss";
+
+.nebulas-game-over-modal {
+  .main{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 1001;
+    transform: translate(-50%, -50%);
+    min-width: 40rem;
+    max-height: 100vh;
+    overflow: auto;
+    background-color: #fff;
+    .title {
+      padding: .5rem;
+      font-size: 4rem;
+      text-align: center;
+      color: $hard-color;
+    }
+    .score-text {
+      padding: .5rem;
+      font-size: 4rem;
+      text-align: center;
+      color: $normal-color;
+    }
+    .content {
+      text-align: center;
+      color: $hard-color;
+      .input-area {
+        padding: .5rem;
+        .text-input {
+          width: 100%;
+          font-size: 1.5rem;
+          line-height: 2;
+          padding: 0 .5rem;
+        }
+      }
+      .save-btn {
+        width: 100%;
+        margin-top: 1rem;
+        border: none;
+        font-size: 1.5rem;
+        line-height: 2;
+        color: #fff;
+        background-color: $header-title-color;
+
+      }
+    }
+  }
+  .mask {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    background-color: rgba(0,0,0,0.5);
+  }
+}

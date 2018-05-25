@@ -12,9 +12,9 @@
     justify-content: space-between;
     width: 100%;
     font-size: 2rem;
-    line-height: 1.5rem;
+    line-height: 4rem;
     background-color: #fff;
-    color: $header-font-color;
+    color: $header-title-color;
     > p {
       padding: 0 1rem;
     }
@@ -26,13 +26,13 @@
         cursor: pointer;
       }
       .normal {
-        color: #33a050
+        color: $normal-color
       }
       .middle {
-        color: #fabe00
+        color: $middle-color
       }
       .hard {
-        color: #d8210d
+        color: $hard-color
       }
       .unselected {
         text-decoration-line: line-through;

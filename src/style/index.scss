@@ -6,6 +6,9 @@ html {
   overflow: hidden;
   font-size: 10px;
 }
+* {
+  box-sizing: border-box;
+}
 html, body, #app {
   width: 100%;
   height: 100%;
@@ -15,4 +18,8 @@ html, body, #app {
 body {
   font-size: 1.4rem;
   background-color: $bg-color;
+}
+
+p {
+  margin: 0;
 }
