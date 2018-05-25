@@ -3,7 +3,6 @@
 <template>
   <div class="main-canvas-view">
     <canvas id="main-canvas" :width="canvasWidth+ 'px'" :height="canvasHeight+ 'px'"></canvas>
-    <game-over v-model="gameOverFlag"/>
   </div>
 </template>
 
@@ -12,7 +11,6 @@ import './index.scss'
 import { mapState } from 'vuex'
 import { KEY_CODES, DIFFICULTY } from '../../enums'
 import { START, STOP, PAUSE, RESUME, RESET } from '../../store/mutationTypes'
-import GameOver from '../GameOverModal'
 
 const originalSnakeBody = [[0, 0], [1, 0], [2, 0]]
 const originalSnakeHead = [3, 0]
@@ -30,14 +28,12 @@ const snakeHeadColorList = {
 
 export default {
   name: 'main-canvas',
-  components: { GameOver },
   data () {
     return {
-      gameOverFlag: true,
       canvas: undefined,
       context: undefined,
-      canvasWidth: 800,
-      canvasHeight: 800,
+      canvasWidth: 20,
+      canvasHeight: 20,
       containerArr: [], // 表示容器内空白位置
       snakeBody: originalSnakeBody.slice(),
       snakeHead: originalSnakeHead.slice(),
@@ -88,7 +84,12 @@ export default {
         left: (this.canvasWidth - this.controlBtnSize.height) / 2,
       }
     },
-    
+  },
+  watch: {
+    difficulty () {
+      this.clearTimer()
+      this.startTimer()
+    },
   },
   mounted () {
     this.init()
@@ -101,9 +102,9 @@ export default {
       this.canvas.onclick = this.mouseClickListener
       document.onkeydown = this.keyPress
       this.context.strokeStyle = backgroundLineColor
-      this.initAvailableFoodArea()
       this.resizeCanvas()
       this.$nextTick(() => {
+        this.initAvailableFoodArea()
         this.clearCanvas()
         this.drawStartBtn()
       })
@@ -148,7 +149,7 @@ export default {
       this.$store.commit('ADD_SCORE')
     },
     keyPress ({ keyCode }) {
-      if (this.disabledDirection === keyCode) {
+      if (!this.started || this.disabledDirection === keyCode) {
         return
       }
       switch (keyCode) {
@@ -167,6 +168,9 @@ export default {
         case KEY_CODES.RIGHT:
           this.headDirection = KEY_CODES.RIGHT
           this.disabledDirection = KEY_CODES.LEFT
+          break
+        case KEY_CODES.SPACE:
+          this.paused ? this.resume() : this.pause()
           break
       }
     },
@@ -233,7 +237,7 @@ export default {
       this.context.fillRect(x * blockSize, y * blockSize, blockSize - 2, blockSize - 2)
     },
     checkIfStuck (nextX, nextY) {
-      if (nextX < 0 || nextX >= this.rowGridCount || nextY < 0 || nextY >= this.columnCount) {
+      if (nextX < 0 || nextX >= this.rowGridCount || nextY < 0 || nextY >= this.columnGridCount) {
         return true
       }
       // slim the calculation
@@ -283,7 +287,6 @@ export default {
     gameOver () {
       this.$store.commit(STOP)
       this.clearTimer()
-      this.finalDraw('GAME OVER!')
     },
     resume () {
       this.$store.commit(RESUME)

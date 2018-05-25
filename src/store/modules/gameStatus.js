@@ -1,8 +1,9 @@
-import { ADD_SCORE, CHANGE_DIFFICULTY, RESTART_GAME, START, STOP, TOGGLE_START, PAUSE, RESUME, RESET } from '../mutationTypes'
+import { ADD_SCORE, CHANGE_DIFFICULTY, RESTART_GAME, START, STOP, TOGGLE_START, PAUSE, RESUME, RESET, HIDE_GAME_OVER_MODAL } from '../mutationTypes'
 import { DIFFICULTY } from '../../enums'
 const state = {
   started: false,
   paused: false,
+  gameOver: false,
   score: 0,
   difficulty: DIFFICULTY.NORMAL,
 }
@@ -14,13 +15,13 @@ const mutations = {
   [CHANGE_DIFFICULTY] (state, difficulty) {
     state.difficulty = difficulty
   },
-  [START] (state) {
-    state.started = true
-    state.paused = false
+  [HIDE_GAME_OVER_MODAL] (state) {
+    state.gameOver = false
   },
   [STOP] (state) {
     state.started = false
     state.paused = false
+    state.gameOver = true
   },
   [PAUSE] (state) {
     state.paused = true
@@ -41,6 +42,11 @@ const mutations = {
     state.started = false
     state.paused = false
     state.score = 0
+  },
+  [START] (state) {
+    state.started = true
+    state.paused = false
+    state.gameOver = false
   },
 }
 

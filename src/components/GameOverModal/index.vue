@@ -3,7 +3,7 @@
 */
 
 <template>
-  <div v-if="showModal" class="nebulas-game-over-modal">
+  <div class="nebulas-game-over-modal">
     <div class="main">
       <p class="title">Game Over!</p>
       <p class="score-text">Your Score: {{ score }}</p>
@@ -11,8 +11,8 @@
         <div class="input-area">
           <input v-model="nickname" placeholder="Please input your nickname!" class="text-input"/>
         </div>
-        <button @click="saveScore" class="save-btn">{{ btnText }}</button>
-        <button @click="getScoreBoard" class="save-btn">Get Score Board</button>
+        <button @click="saveScore" :class="['save-btn', { 'disabled-btn': saving }]">{{ btnText }}</button>
+        <p @click="getScoreBoard" class="score-board-link">Show Score Board</p>
       </div>
     </div>
     <div class="mask" @click="hide"></div>
@@ -20,55 +20,53 @@
 </template>
 
 <script>
-
 import './index.scss'
 import { mapState } from 'vuex'
+import { HIDE_GAME_OVER_MODAL, TOGGLE_SCORE_BOARD_SHOW } from '../../store/mutationTypes'
 
 export default {
   name: 'nebulas-modal',
-  props: {
-    value: { type: Boolean, default: false },
-  },
   data () {
     return {
       nickname: '',
       saving: false,
+      saved: false,
     }
   },
   computed: {
     ...mapState({
       score: state => state.gameStatus.score,
     }),
-    showModal () {
-      return this.value
-    },
     btnText () {
-      return this.saving ? 'Saving' : 'Save to Nebulas'
+      if (this.saved) {
+        return 'Saved!'
+      }
+      return this.saving ? 'Saving...' : 'Save to Nebulas Forever!'
     },
   },
   methods: {
+    reset () {
+      this.saving = false
+      this.saved = false
+    },
     hide () {
-      this.$emit('input', false)
+      this.$store.commit(HIDE_GAME_OVER_MODAL)
+      this.reset()
     },
     async saveScore () {
-      if (this.saving) {
+      if (this.saving || this.saved) {
         return
       }
       this.saving = true
       const nickname = this.nickname || 'anonymous'
-      const score = this.score
-      const res = await this.$store.dispatch('saveScore', [nickname, score])
-      console.log(res)
+      const score = this.score + ''
+      await this.$store.dispatch('saveScore', [nickname, score])
       this.saving = false
+      this.saved = true
     },
-    async getScoreBoard () {
-      const res = await this.$store.dispatch('getScoreBoard')
-      console.log(res)
-    },
-    mount () {
-      const el = document.createElement('div')
-      document.body.appendChild(el)
-      this.$mount(el)
+    getScoreBoard () {
+      this.hide()
+      this.$store.commit(TOGGLE_SCORE_BOARD_SHOW, true)
     },
   },
 }

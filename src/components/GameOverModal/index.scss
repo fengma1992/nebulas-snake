@@ -45,7 +45,14 @@
         line-height: 2;
         color: #fff;
         background-color: $header-title-color;
-
+      }
+      .disabled-btn {
+        background-color: $disabled-bg-color;
+        cursor: not-allowed;
+      }
+      .score-board-link {
+        padding: 1rem;
+        cursor: pointer;
       }
     }
   }
