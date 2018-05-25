@@ -1,6 +1,10 @@
 # nebulas-snake
 
-> A Vue.js project
+> A nebulas DAPP 
+
+Try at [Nebulas Snake](https://fengma1992.github.io/nebulas-snake/)
+
+> You can save your score record on the nebulas chain and challenge the TOP 100 players
 
 ## Build Setup
 
@@ -17,5 +21,3 @@ npm run build
 # build for production and view the bundle analyzer report
 npm run build --report
 ```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
