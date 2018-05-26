@@ -2,7 +2,7 @@
 
 <template>
   <div class="main-canvas-view">
-    <canvas id="main-canvas" :width="canvasWidth+ 'px'" :height="canvasHeight+ 'px'"></canvas>
+    <canvas id="main-canvas" :width="canvasWidth+ 'px'" :height="canvasHeight+ 'px'" :class="[{'wall-border': wall}]"></canvas>
   </div>
 </template>
 
@@ -52,6 +52,7 @@ export default {
   },
   computed: {
     ...mapState({
+      wall: state => state.gameStatus.wall,
       started: state => state.gameStatus.started,
       paused: state => state.gameStatus.paused,
       score: state => state.gameStatus.score,
@@ -87,8 +88,12 @@ export default {
   },
   watch: {
     difficulty () {
-      this.clearTimer()
-      this.startTimer()
+      if (!this.started) {
+        this.startGame()
+      } else {
+        this.clearTimer()
+        this.startTimer()
+      }
     },
   },
   mounted () {
@@ -179,7 +184,7 @@ export default {
       this.context.font = `${this.baseFontSize}px serif`
       this.context.textAlign = 'center'
       this.context.fillText(this.score, this.canvasWidth / 2, this.canvas.height / 2)
-      const text = 'Resume'
+      const text = 'Paused, click to resume'
       this.context.font = `${this.baseFontSize}px serif`
       this.context.fillText(text, this.canvasWidth / 2, this.canvas.height / 2 + this.baseFontSize)
     },
@@ -237,7 +242,7 @@ export default {
       this.context.fillRect(x * blockSize, y * blockSize, blockSize - 2, blockSize - 2)
     },
     checkIfStuck (nextX, nextY) {
-      if (nextX < 0 || nextX >= this.rowGridCount || nextY < 0 || nextY >= this.columnGridCount) {
+      if (this.wall && (nextX < 0 || nextX >= this.rowGridCount || nextY < 0 || nextY >= this.columnGridCount)) {
         return true
       }
       // slim the calculation
@@ -299,6 +304,22 @@ export default {
       this.drawLastScene()
       this.drawPausedBtn()
     },
+    calcHeadPositionIfNoWall () {
+      let [X, Y] = this.snakeHead
+      if (X < 0 && this.headDirection === KEY_CODES.LEFT) {
+        X = this.rowGridCount - 1
+      }
+      if (X >= this.rowGridCount && this.headDirection === KEY_CODES.RIGHT) {
+        X = 0
+      }
+      if (Y < 0 && this.headDirection === KEY_CODES.UP) {
+        Y = this.columnGridCount - 1
+      }
+      if (Y >= this.columnGridCount && this.headDirection === KEY_CODES.DOWN) {
+        Y = 0
+      }
+      this.snakeHead = [X, Y]
+    },
     startTimer () {
       this.timer = setInterval(() => {
         let [nextX, nextY] = this.snakeHead
@@ -306,12 +327,15 @@ export default {
         nextX += currentDiffPositions[0]
         nextY += currentDiffPositions[1]
         if (this.checkIfStuck(nextX, nextY)) {
-          console.log({ nextX, nextY })
+          // console.log({ nextX, nextY })
           this.gameOver()
           return
         }
         this.snakeBody.push(this.snakeHead)
         this.snakeHead = [nextX, nextY]
+        if (!this.wall) {
+          this.calcHeadPositionIfNoWall()
+        }
         this.animate()
       }, this.difficulty)
     },

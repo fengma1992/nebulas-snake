@@ -1,6 +1,7 @@
-import { ADD_SCORE, CHANGE_DIFFICULTY, RESTART_GAME, START, STOP, TOGGLE_START, PAUSE, RESUME, RESET, HIDE_GAME_OVER_MODAL } from '../mutationTypes'
+import { ADD_SCORE, CHANGE_DIFFICULTY, RESTART_GAME, START, STOP, TOGGLE_START, PAUSE, RESUME, RESET, HIDE_GAME_OVER_MODAL, TOGGLE_WALL } from '../mutationTypes'
 import { DIFFICULTY } from '../../enums'
 const state = {
+  wall: true,
   started: false,
   paused: false,
   gameOver: false,
@@ -47,6 +48,9 @@ const mutations = {
     state.started = true
     state.paused = false
     state.gameOver = false
+  },
+  [TOGGLE_WALL] (state) {
+    state.wall = !state.wall
   },
 }
 

@@ -1,7 +1,9 @@
 @charset "UTF-8";
 
+@import "../../style/color.scss";
+
 .main-canvas-view {
-  #main-canvas {
-    box-shadow: 0 0 1rem #CCCCFF;
+  .wall-border {
+    box-shadow: 0 0 0 1rem $header-title-color;
   }
 }

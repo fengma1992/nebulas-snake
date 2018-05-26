@@ -38,6 +38,13 @@
         text-decoration-line: line-through;
       }
     }
+    .toggle-wall {
+      display: flex;
+      align-items: center;
+      .switch-input {
+        margin-left: .5rem;
+      }
+    }
   }
   &-main {
     flex: 1;

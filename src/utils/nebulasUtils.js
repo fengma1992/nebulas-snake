@@ -5,7 +5,7 @@ import NebPay from 'nebpay'
 
 const callbackUrl = NebPay.config.testnetUrl
 const nebPay = new NebPay()
-const dappAddress = 'n1tPNhEfVPymAhuVRYsTfHo71CZkr81UKVY'
+const dappAddress = 'n1tfKeNFjJMWTzHW78UugpURCDzrTyPUPwZ'
 const myAccount = 'n1FQy3GYN6EbF5ajqScUjLH6zXBN5HW2Nx4'
 
 /**
@@ -60,7 +60,7 @@ function freeCall (callFunction, params = []) {
     const callArgs = JSON.stringify(params)
     nebPay.simulateCall(to, value, callFunction, callArgs, {
       listener: res => {
-        console.log(res)
+        // console.log(res)
         resolve(res.result)
       }
     })

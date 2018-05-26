@@ -12,6 +12,7 @@
         <p @click="setDifficulty(DIFFICULTY.HARD)"
            :class="['difficulty-btn', 'hard', {'unselected': DIFFICULTY.HARD !== difficulty}]">Hard</p>
       </div>
+      <div class="toggle-wall">Wall: <switch-input v-model="wall" class="switch-input"/></div>
       <p>Score: {{ score }}</p>
     </div>
     <div class="default-view-main">
@@ -29,15 +30,16 @@
 <script>
 import { mapState } from 'vuex'
 import { DIFFICULTY } from '../enums'
-import { CHANGE_DIFFICULTY, UPDATE_EXTENSION_STATUS } from '../store/mutationTypes'
+import { CHANGE_DIFFICULTY, UPDATE_EXTENSION_STATUS, TOGGLE_WALL } from '../store/mutationTypes'
 import './index.scss'
 import MainCanvas from '../components/MainCanvas'
 import ScoreBoard from '../components/ScoreBoard'
 import GameOver from '../components/GameOverModal'
+import SwitchInput from '../components/SwitchInput'
 
 export default {
   name: 'nebulas-snake',
-  components: { MainCanvas, ScoreBoard, GameOver },
+  components: { MainCanvas, ScoreBoard, GameOver, SwitchInput },
   data () {
     return {
       DIFFICULTY,
@@ -50,6 +52,14 @@ export default {
       extensionInstalled: state => state.nebulasData.extensionInstalled,
       gameOver: state => state.gameStatus.gameOver,
     }),
+    wall: {
+      get () {
+        return this.$store.state.gameStatus.wall
+      },
+      set () {
+        this.$store.commit(TOGGLE_WALL)
+      }
+    }
   },
   beforeMount () {
     this.checkIfExtensionInstalled()

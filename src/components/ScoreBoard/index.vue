@@ -62,7 +62,7 @@ export default {
       showScoreBoard: state => state.nebulasData.showScoreBoard,
     }),
     scoreBoardToShow () {
-      return this.showTop100Score ? this.top100ScoreBoard : this.userScoreBoard
+      return (this.showTop100Score ? this.top100ScoreBoard : this.userScoreBoard) || []
     },
   },
   watch: {
