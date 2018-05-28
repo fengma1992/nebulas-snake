@@ -6,7 +6,7 @@ import NebPay from 'nebpay'
 const callbackUrl = NebPay.config.testnetUrl
 const nebPay = new NebPay()
 const dappAddress = 'n1tfKeNFjJMWTzHW78UugpURCDzrTyPUPwZ'
-const myAccount = 'n1FQy3GYN6EbF5ajqScUjLH6zXBN5HW2Nx4'
+const myAccount = 'n1SSssSSo74juWXrz5imkabwJe3dXPWwwHg'
 
 /**
  * 如果只查询类的请求 就不需要去支付 直接使用 nebPay 的 simulateCall 即可
